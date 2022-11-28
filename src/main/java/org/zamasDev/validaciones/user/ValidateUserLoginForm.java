@@ -3,6 +3,7 @@ package org.zamasDev.validaciones.user;
 
 import org.zamasDev.entity.EntityUser;
 import org.zamasDev.gui.FormDashboard;
+import org.zamasDev.gui.FormUserLogin;
 import org.zamasDev.mantenimiento.GestionUserDAO;
 import org.zamasDev.utils.Decorations;
 import javax.swing.*;
@@ -16,9 +17,10 @@ public class ValidateUserLoginForm {
     GestionUserDAO gUser = new GestionUserDAO();
 
     FormDashboard guiDashboardForm = new FormDashboard();
+    FormUserLogin guiUserLoginForm = new FormUserLogin();
     public static EntityUser userEntity = new EntityUser();
 
-    public void validateUserLogin(JTextField txtUser, JPasswordField txtPass, JSeparator spUser, JSeparator spPass) {
+    public boolean validateUserLogin(JTextField txtUser, JPasswordField txtPass, JSeparator spUser, JSeparator spPass) {
 
         String user, pass;
 
@@ -39,12 +41,13 @@ public class ValidateUserLoginForm {
                 JOptionPane.showMessageDialog(null, "Welcome " + userEntity.getUsername());
                 guiDashboardForm.setVisible(true);
                 guiDashboardForm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                return true;
             } else {
                 JOptionPane.showMessageDialog(null, "Incorrect username or password");
             }
-
         }
 
+        return false;
     }
 
     private String getPass(JPasswordField txtPass, JSeparator spPass) {

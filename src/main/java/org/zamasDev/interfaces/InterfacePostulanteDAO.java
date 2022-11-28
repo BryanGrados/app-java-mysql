@@ -9,9 +9,6 @@ public interface InterfacePostulanteDAO {
     public int actualizarPostulante(EntityPostulante postulante);
     public int eliminarPostulante(int id);
     public ArrayList<EntityPostulante> listarPostulante();
-    //if postulante status == aprobado, this should move to practicante table
-    //This is for transaction GUI
-    public ArrayList<EntityPostulante> listarPostulanteAprobado();
 
 }
 

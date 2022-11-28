@@ -8,18 +8,18 @@ public class EntityPracticante {
     String apellido;
     String fechaIngreso;
     Double sueldo;
-    int idPostulante;
+    String dni;
 
     public EntityPracticante() {
     }
 
-    public EntityPracticante(int id, String nombre, String apellido, String fechaIngreso, Double sueldo, int idPostulante) {
+    public EntityPracticante(int id, String nombre, String apellido, String fechaIngreso, Double sueldo, String dni) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.fechaIngreso = fechaIngreso;
         this.sueldo = sueldo;
-        this.idPostulante = idPostulante;
+        this.dni = dni;
     }
 
     public int getId() {
@@ -62,11 +62,11 @@ public class EntityPracticante {
         this.sueldo = sueldo;
     }
 
-    public int getIdPostulante() {
-        return idPostulante;
+    public String getDni() {
+        return dni;
     }
 
-    public void setIdPostulante(int idPostulante) {
-        this.idPostulante = idPostulante;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

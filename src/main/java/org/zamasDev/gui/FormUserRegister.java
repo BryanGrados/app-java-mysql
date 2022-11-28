@@ -19,7 +19,6 @@ public class FormUserRegister extends JFrame {
     private JPasswordField txtPassword, txtConfirmedPassword;
     private JLabel lblViewPassword, lblRegister, lblSubmit, lblClose, lblLogin, lblHero;
     private JTextField txtEmail, txtUsername;
-    ;
     private JSeparator spUsername, spPassword, spLoginAccount, spConfirmPassword, spEmail;
     private JLabel lblViewConfirmedPassword;
 
@@ -95,7 +94,7 @@ public class FormUserRegister extends JFrame {
         panel.add(spLoginAccount);
 
         lblHero = new JLabel("");
-        lblHero.setIcon(new ImageIcon("src/main/java/src/imgs/hero.png"));
+        lblHero.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/hero.png"));
         lblHero.setBounds(10, 41, 323, 440);
         contentPane.add(lblHero);
 
@@ -109,7 +108,7 @@ public class FormUserRegister extends JFrame {
         lblClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblClose.setHorizontalAlignment(SwingConstants.CENTER);
         lblClose.setHorizontalTextPosition(SwingConstants.CENTER);
-        lblClose.setIcon(new ImageIcon("src/main/java/src/imgs/close.png"));
+        lblClose.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/close.png"));
         lblClose.setBounds(10, 11, 46, 24);
         contentPane.add(lblClose);
 
@@ -158,7 +157,7 @@ public class FormUserRegister extends JFrame {
         });
         lblViewPassword.setHorizontalTextPosition(SwingConstants.CENTER);
         lblViewPassword.setHorizontalAlignment(SwingConstants.CENTER);
-        lblViewPassword.setIcon(new ImageIcon("src/main/java/src/imgs/eye-open.png"));
+        lblViewPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-open.png"));
         lblViewPassword.setBounds(291, 250, 46, 43);
         panel.add(lblViewPassword);
 
@@ -172,7 +171,7 @@ public class FormUserRegister extends JFrame {
         });
         lblViewConfirmedPassword.setHorizontalTextPosition(SwingConstants.CENTER);
         lblViewConfirmedPassword.setHorizontalAlignment(SwingConstants.CENTER);
-        lblViewConfirmedPassword.setIcon(new ImageIcon("src/main/java/src/imgs/eye-open.png"));
+        lblViewConfirmedPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-open.png"));
         lblViewConfirmedPassword.setBounds(291, 336, 46, 43);
         panel.add(lblViewConfirmedPassword);
 
@@ -345,20 +344,20 @@ public class FormUserRegister extends JFrame {
     protected void lblViewPasswordMouseClicked(MouseEvent e) {
         if (txtPassword.getEchoChar() == (char) 0) {
             txtPassword.setEchoChar('•');
-            lblViewPassword.setIcon(new ImageIcon("src/main/java/src/imgs/eye-close.png"));
+            lblViewPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-close.png"));
         } else {
             txtPassword.setEchoChar((char) 0);
-            lblViewPassword.setIcon(new ImageIcon("src/main/java/src/imgs/eye-open.png"));
+            lblViewPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-open.png"));
         }
     }
 
     protected void lblViewConfirmedPasswordMouseClicked(MouseEvent e) {
         if (txtConfirmedPassword.getEchoChar() == (char) 0) {
             txtConfirmedPassword.setEchoChar('•');
-            lblViewConfirmedPassword.setIcon(new ImageIcon("src/main/java/src/imgs/eye-close.png"));
+            lblViewConfirmedPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-close.png"));
         } else {
             txtConfirmedPassword.setEchoChar((char) 0);
-            lblViewConfirmedPassword.setIcon(new ImageIcon("src/main/java/src/imgs/eye-open.png"));
+            lblViewConfirmedPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-open.png"));
         }
     }
 

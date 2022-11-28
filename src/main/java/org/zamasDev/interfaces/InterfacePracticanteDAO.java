@@ -9,8 +9,7 @@ public interface InterfacePracticanteDAO {
     public int insertarPracticante(EntityPracticante practicante);
     public int actualizarPracticante(EntityPracticante practicante);
     public int eliminarPracticante(int id);
-
     public ArrayList<EntityPracticante> listarPracticante();
-
-
+    public EntityPracticante buscarPracticante(String dni);
+    public int actualizarEstadoPostulante(String dni);
 }

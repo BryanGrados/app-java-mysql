@@ -2,7 +2,7 @@ package org.zamasDev.gui;
 
 import org.zamasDev.entity.EntityPostulante;
 import org.zamasDev.mantenimiento.GestionPostulanteDAO;
-import org.zamasDev.validaciones.postulante.RegexPostulante;
+import org.zamasDev.validaciones.global.RegexG;
 
 import java.awt.*;
 
@@ -501,11 +501,11 @@ public class FormPostulante extends JFrame {
         int getEstado = cboEstado.getSelectedIndex();
 
         if (getEstado == 0) {
-            estado = "P";
+            estado = "Pendiente";
         } else if (getEstado == 1) {
-            estado = "A";
+            estado = "Aprobado";
         } else if (getEstado == 2) {
-            estado = "R";
+            estado = "Rechazado";
         } else {
             JOptionPane.showMessageDialog(null, "Error al obtener el estado");
         }
@@ -519,7 +519,7 @@ public class FormPostulante extends JFrame {
 
         if (getEmail.length() == 0) {
             JOptionPane.showMessageDialog(null, "El campo email no puede estar vacio");
-        } else if (txtEmail.getText().trim().matches(RegexPostulante.EMAIL)) {
+        } else if (txtEmail.getText().trim().matches(RegexG.EMAIL)) {
             email = getEmail;
         } else {
             JOptionPane.showMessageDialog(null, "Error al obtener el email");
@@ -534,7 +534,7 @@ public class FormPostulante extends JFrame {
 
         if (getTelefono.length() == 0) {
             JOptionPane.showMessageDialog(null, "El campo telefono no puede estar vacio");
-        } else if (txtTelefono.getText().trim().matches(RegexPostulante.TELEFONO)) {
+        } else if (txtTelefono.getText().trim().matches(RegexG.TELEFONO)) {
             telefono = getTelefono;
         } else {
             JOptionPane.showMessageDialog(null, "Error al obtener el telefono");
@@ -549,7 +549,7 @@ public class FormPostulante extends JFrame {
 
         if (getDNI.length() == 0) {
             JOptionPane.showMessageDialog(null, "El campo DNI no puede estar vacio");
-        } else if (txtDNI.getText().trim().matches(RegexPostulante.DNI)) {
+        } else if (txtDNI.getText().trim().matches(RegexG.DNI)) {
             dni = getDNI;
         } else {
             JOptionPane.showMessageDialog(null, "Error al obtener el DNI");
@@ -564,7 +564,7 @@ public class FormPostulante extends JFrame {
 
         if (getApellido.length() == 0) {
             JOptionPane.showMessageDialog(null, "El campo apellido no puede estar vacio");
-        } else if (txtApellido.getText().trim().matches(RegexPostulante.APELLIDO)) {
+        } else if (txtApellido.getText().trim().matches(RegexG.APELLIDO)) {
             apellido = getApellido;
         } else {
             JOptionPane.showMessageDialog(null, "Error al obtener el apellido");
@@ -579,7 +579,7 @@ public class FormPostulante extends JFrame {
 
         if (getNombre.length() == 0) {
             JOptionPane.showMessageDialog(null, "El campo nombre no puede estar vacio");
-        } else if (txtNombre.getText().trim().matches(RegexPostulante.NOMBRE)) {
+        } else if (txtNombre.getText().trim().matches(RegexG.NOMBRE)) {
             nombre = getNombre;
         } else {
             JOptionPane.showMessageDialog(null, "Error al obtener el nombre");

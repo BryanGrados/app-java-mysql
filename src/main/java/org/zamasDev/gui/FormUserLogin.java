@@ -3,17 +3,10 @@ package org.zamasDev.gui;
 import org.zamasDev.utils.Decorations;
 import org.zamasDev.validaciones.user.ValidateUserLoginForm;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
 import java.awt.Color;
-import javax.swing.JPasswordField;
 import javax.swing.border.LineBorder;
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -91,7 +84,7 @@ public class FormUserLogin extends JFrame {
 		panel.add(spAccount);
 
 		hero = new JLabel("");
-		hero.setIcon(new ImageIcon("src/main/java/org/example/imgs/hero.png"));
+		hero.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/hero.png"));
 		hero.setBounds(10, 41, 323, 440);
 		contentPane.add(hero);
 
@@ -105,7 +98,7 @@ public class FormUserLogin extends JFrame {
 		lblClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblClose.setHorizontalAlignment(SwingConstants.CENTER);
 		lblClose.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblClose.setIcon(new ImageIcon("src/main/java/org/example/imgs/close.png"));
+		lblClose.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/close.png"));
 		lblClose.setBounds(10, 11, 46, 24);
 		contentPane.add(lblClose);
 
@@ -154,7 +147,7 @@ public class FormUserLogin extends JFrame {
 		});
 		lblViewPassword.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblViewPassword.setHorizontalAlignment(SwingConstants.CENTER);
-		lblViewPassword.setIcon(new ImageIcon("src/main/java/org/example/imgs/eye-close.png"));
+		lblViewPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-close.png"));
 		lblViewPassword.setBounds(291, 259, 46, 43);
 		panel.add(lblViewPassword);
 
@@ -216,7 +209,10 @@ public class FormUserLogin extends JFrame {
 	}
 	protected void lblSubmitMousePressed(MouseEvent e) {
 		ValidateUserLoginForm validateUserLoginForm = new ValidateUserLoginForm();
-		validateUserLoginForm.validateUserLogin(txtUsername, txtPassword, spUser, spPass);
+		if (validateUserLoginForm.validateUserLogin(txtUsername, txtPassword, spUser, spPass)) {
+			this.dispose();
+			this.setVisible(false);
+		}
 	}
 
 	private void txtUsernameFocusGained(FocusEvent evt) {
@@ -252,10 +248,10 @@ public class FormUserLogin extends JFrame {
 	protected void lblViewPasswordMouseClicked(MouseEvent e) {
 		if (txtPassword.getEchoChar() == (char) 0) {
 			txtPassword.setEchoChar('•');
-			lblViewPassword.setIcon(new ImageIcon("src/main/java/org/example/imgs/eye-close.png"));
+			lblViewPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-close.png"));
 		} else {
 			txtPassword.setEchoChar((char) 0);
-			lblViewPassword.setIcon(new ImageIcon("src/main/java/org/example/imgs/eye-open.png"));
+			lblViewPassword.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/eye-open.png"));
 		}
 	}
 }

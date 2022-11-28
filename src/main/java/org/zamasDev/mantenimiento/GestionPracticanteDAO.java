@@ -9,8 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-//tb_practicante contains the fields: id_practicante, nombre, apellido, fechaInicio, sueldo, id_postulante
-
 public class GestionPracticanteDAO implements InterfacePracticanteDAO {
     @Override
     public int insertarPracticante(EntityPracticante practicante) {
@@ -20,9 +18,8 @@ public class GestionPracticanteDAO implements InterfacePracticanteDAO {
         PreparedStatement pstm = null;
 
         try {
-
             con = MySQLConnector.getConnection();
-            String sql = "insert into tb_practicante values (?, ?, ?, ?, ?, ?)";
+            String sql = "insert into tb_practicante values (?, ? , ? , ? , ?, ?)";
             pstm = con.prepareStatement(sql);
 
             pstm.setInt(1, practicante.getId());
@@ -30,7 +27,7 @@ public class GestionPracticanteDAO implements InterfacePracticanteDAO {
             pstm.setString(3, practicante.getApellido());
             pstm.setString(4, practicante.getFechaIngreso());
             pstm.setDouble(5, practicante.getSueldo());
-            pstm.setInt(6, practicante.getIdPostulante());
+            pstm.setString(6, practicante.getDni());
 
             res = pstm.executeUpdate();
 
@@ -53,7 +50,6 @@ public class GestionPracticanteDAO implements InterfacePracticanteDAO {
                 System.out.println("Error >>> en el cierre de la conexión " + e.getMessage());
             }
         }
-
         return res;
     }
 
@@ -67,15 +63,12 @@ public class GestionPracticanteDAO implements InterfacePracticanteDAO {
         try {
 
             con = MySQLConnector.getConnection();
-            String sql = "update tb_practicante set nombre = ?, apellido = ?, fechaInicio = ?, sueldo = ?, id_postulante = ? where id_practicante = ?";
+            String sql = "update tb_practicante set fechaIngreso = ?, sueldo = ? where id_practicante = ?";
             pstm = con.prepareStatement(sql);
 
-            pstm.setString(1, practicante.getNombre());
-            pstm.setString(2, practicante.getApellido());
-            pstm.setString(3, practicante.getFechaIngreso());
-            pstm.setDouble(4, practicante.getSueldo());
-            pstm.setInt(5, practicante.getIdPostulante());
-            pstm.setInt(6, practicante.getId());
+            pstm.setString(1, practicante.getFechaIngreso());
+            pstm.setDouble(2, practicante.getSueldo());
+            pstm.setInt(3, practicante.getId());
 
             res = pstm.executeUpdate();
 
@@ -166,9 +159,9 @@ public class GestionPracticanteDAO implements InterfacePracticanteDAO {
                 practicante.setId(res.getInt("id_practicante"));
                 practicante.setNombre(res.getString("nombre"));
                 practicante.setApellido(res.getString("apellido"));
-                practicante.setFechaIngreso(res.getString("fechaInicio"));
+                practicante.setFechaIngreso(res.getString("fechaIngreso"));
                 practicante.setSueldo(res.getDouble("sueldo"));
-                practicante.setIdPostulante(res.getInt("id_postulante"));
+                practicante.setDni(res.getString("dni"));
 
                 lista.add(practicante);
             }
@@ -195,7 +188,99 @@ public class GestionPracticanteDAO implements InterfacePracticanteDAO {
                 System.out.println("Error >>> en el cierre de la conexión " + e.getMessage());
             }
         }
-        
+
         return lista;
+    }
+
+    @Override
+    public EntityPracticante buscarPracticante(String dni) {
+        EntityPracticante practicante = new EntityPracticante();
+
+        Connection con = null;
+        PreparedStatement pstm = null;
+        ResultSet res = null;
+
+        try {
+
+            con = MySQLConnector.getConnection();
+            String sql = "select * from tb_postulante where dni = ?";
+            pstm = con.prepareStatement(sql);
+
+            pstm.setString(1, dni);
+
+            res = pstm.executeQuery();
+
+            while (res.next()) {
+
+                practicante.setId(res.getInt("id_postulante"));
+                practicante.setNombre(res.getString("nombre"));
+                practicante.setApellido(res.getString("apellido"));
+                practicante.setDni(res.getString("dni"));
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error >>> en la instrucción SQL de buscar " + e.getMessage());
+
+        } finally {
+
+            try {
+
+                if (res != null) {
+                    res.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error >>> en el cierre de la conexión " + e.getMessage());
+            }
+        }
+        return practicante;
+    }
+
+    @Override
+    public int actualizarEstadoPostulante(String dni) {
+        int res = 0;
+
+        Connection con = null;
+        PreparedStatement pstm = null;
+
+        try {
+
+            con = MySQLConnector.getConnection();
+            String sql = "update tb_postulante set estado = ? where dni = ?";
+            pstm = con.prepareStatement(sql);
+
+            pstm.setString(1, "P");
+            pstm.setString(2, dni);
+
+            res = pstm.executeUpdate();
+
+        } catch (Exception e) {
+
+            System.out.println("Error >>> en la instrucción SQL de actualizar " + e.getMessage());
+
+        } finally {
+
+            try {
+
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error >>> en el cierre de la conexión " + e.getMessage());
+            }
+        }
+
+        return res;
     }
 }
