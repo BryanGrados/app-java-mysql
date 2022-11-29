@@ -138,7 +138,7 @@ public class FormPracticante extends JFrame {
         tbPostulantes.setRowHeight(25);
 
 
-        lblTitle = new JLabel("Mantenimiento de Postulantes");
+        lblTitle = new JLabel("Mantenimiento de Practicantes");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lblTitle.setBounds(10, 0, 707, 49);
         panel.add(lblTitle);

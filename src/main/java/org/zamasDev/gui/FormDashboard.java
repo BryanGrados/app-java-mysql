@@ -282,6 +282,8 @@ public class FormDashboard extends JFrame {
     }
 
     protected void lblTransaccionesMousePressed(MouseEvent e) {
+        FormTransacciones formTransacciones = new FormTransacciones();
+        formTransacciones.setVisible(true);
     }
 
     protected void lblCloseMousePressed(MouseEvent e) {

@@ -227,6 +227,7 @@ public class FormConsultaPostulantes extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
+
     private void cargarTabla() {
         limpiarTabla();
         for (EntityPostulante postulante : gestionPostulante.listarPostulante()) {
