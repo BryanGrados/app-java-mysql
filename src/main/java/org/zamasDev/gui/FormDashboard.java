@@ -3,15 +3,10 @@ package org.zamasDev.gui;
 import org.zamasDev.utils.Decorations;
 
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.JSeparator;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.ImageIcon;
 import java.awt.Cursor;
 import java.awt.event.*;
 
@@ -58,7 +53,7 @@ public class FormDashboard extends JFrame {
      */
     public FormDashboard() {
         setUndecorated(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 1044, 650);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(255, 255, 255));
@@ -88,17 +83,17 @@ public class FormDashboard extends JFrame {
 
         lblAstronaut = new JLabel("");
         lblAstronaut.setHorizontalAlignment(SwingConstants.CENTER);
-        lblAstronaut.setIcon(new ImageIcon("src/main/java/org/example/imgs/space.png"));
+        lblAstronaut.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/space.png"));
         lblAstronaut.setBounds(742, 429, 292, 210);
         panel.add(lblAstronaut);
 
         lblSpace = new JLabel("");
-        lblSpace.setIcon(new ImageIcon("src/main/java/org/example/imgs/planet.png"));
+        lblSpace.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/planet.png"));
         lblSpace.setBounds(766, 11, 268, 289);
         panel.add(lblSpace);
 
         lblPortal = new JLabel("");
-        lblPortal.setIcon(new ImageIcon("src/main/java/org/example/imgs/portal.png"));
+        lblPortal.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/portal.png"));
         lblPortal.setBounds(20, 100, 268, 452);
         panel.add(lblPortal);
 
@@ -202,18 +197,18 @@ public class FormDashboard extends JFrame {
 
         lblIconConsultas = new JLabel("");
         lblIconConsultas.setHorizontalAlignment(SwingConstants.CENTER);
-        lblIconConsultas.setIcon(new ImageIcon("src/main/java/org/example/imgs/chart.png"));
+        lblIconConsultas.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/chart.png"));
         lblIconConsultas.setBounds(576, 315, 32, 27);
         panel.add(lblIconConsultas);
 
         lblIconRegistros = new JLabel("");
-        lblIconRegistros.setIcon(new ImageIcon("src/main/java/org/example/imgs/book.png"));
+        lblIconRegistros.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/book.png"));
         lblIconRegistros.setHorizontalAlignment(SwingConstants.CENTER);
         lblIconRegistros.setBounds(576, 207, 32, 27);
         panel.add(lblIconRegistros);
 
         lblIconTransacciones = new JLabel("");
-        lblIconTransacciones.setIcon(new ImageIcon("src/main/java/org/example/imgs/trans.png"));
+        lblIconTransacciones.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/trans.png"));
         lblIconTransacciones.setHorizontalAlignment(SwingConstants.CENTER);
         lblIconTransacciones.setBounds(576, 429, 32, 27);
         panel.add(lblIconTransacciones);
@@ -226,7 +221,7 @@ public class FormDashboard extends JFrame {
                 lblCloseMousePressed(e);
             }
         });
-        lblClose.setIcon(new ImageIcon("src/main/java/org/example/imgs/close.png"));
+        lblClose.setIcon(new ImageIcon("src/main/java/org/zamasDev/img/close.png"));
         lblClose.setHorizontalAlignment(SwingConstants.CENTER);
         lblClose.setBounds(20, 11, 46, 26);
         panel.add(lblClose);
@@ -246,9 +241,44 @@ public class FormDashboard extends JFrame {
     }
 
     protected void lblMantenimientosMousePressed(MouseEvent e) {
+        Object[] options = {"Postulantes", "Practicantes", "Empleadores"};
+        int n = JOptionPane.showOptionDialog(this,
+                "Seleccione un mantenimiento",
+                "Mantenimientos",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                new ImageIcon("src/main/java/org/zamasDev/img/book.png"),
+                options,
+                options[2]);
+        if (n == 0) {
+            FormPostulante formPostulante = new FormPostulante();
+            formPostulante.setVisible(true);
+        } else if (n == 1) {
+            FormPracticante formPracticante = new FormPracticante();
+            formPracticante.setVisible(true);
+        } else if (n == 2) {
+            FormEmpleador formEmpleador = new FormEmpleador();
+            formEmpleador.setVisible(true);
+        }
     }
 
     protected void lblConsultasMousePressed(MouseEvent e) {
+        Object[] options = {"Postulantes", "Practicantes"};
+        int n = JOptionPane.showOptionDialog(this,
+                "Seleccione una consulta",
+                "Consultas",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                new ImageIcon("src/main/java/org/zamasDev/img/chart.png"),
+                options,
+                options[1]);
+        if (n == 0) {
+            FormConsultaPostulantes formConsultaPostulante = new FormConsultaPostulantes();
+            formConsultaPostulante.setVisible(true);
+        } else {
+            FormConsultaPracticantes formConsultaPracticante = new FormConsultaPracticantes();
+            formConsultaPracticante.setVisible(true);
+        }
     }
 
     protected void lblTransaccionesMousePressed(MouseEvent e) {

@@ -15,10 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.List;
 
 public class FormEmpleador extends JFrame {
@@ -123,7 +120,7 @@ public class FormEmpleador extends JFrame {
         tbPostulantes.setRowHeight(25);
 
 
-        lblTitle = new JLabel("Mantenimiento de Postulantes");
+        lblTitle = new JLabel("Mantenimiento de Empleadores");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lblTitle.setBounds(10, 0, 707, 49);
         panel.add(lblTitle);
@@ -251,6 +248,8 @@ public class FormEmpleador extends JFrame {
         setIncrementedCodigo();
         limpiarCampos();
         cargarDatos();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
 
     private void actionPerformedBtnRegistrar(ActionEvent e) {

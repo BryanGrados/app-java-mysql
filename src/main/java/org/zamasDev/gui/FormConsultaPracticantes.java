@@ -1,18 +1,10 @@
 package org.zamasDev.gui;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.JSeparator;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.CaretListener;
@@ -20,11 +12,22 @@ import javax.swing.event.CaretEvent;
 import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
 import org.zamasDev.entity.EntityPracticante;
 import org.zamasDev.mantenimiento.ConsultasPracticantesDAO;
@@ -40,6 +43,7 @@ public class FormConsultaPracticantes extends JFrame {
     private JTable tblConsultas;
     private JTextField txtNombre;
     private JButton btnLimpiar;
+    private JButton btnGenerarReporte;
     private JLabel lblPorDNI;
     private JTextField txtDNI;
     private JLabel lblPorFecha;
@@ -120,13 +124,22 @@ public class FormConsultaPracticantes extends JFrame {
         panel.add(txtNombre);
         txtNombre.setColumns(10);
 
+        btnGenerarReporte = new JButton("Reporte");
+        btnGenerarReporte.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                actionPerformedBtnGenerarReporte(e);
+            }
+        });
+        btnGenerarReporte.setBounds(510, 78, 89, 23);
+        panel.add(btnGenerarReporte);
+
         btnLimpiar = new JButton("Limpiar");
         btnLimpiar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                actionPerformedBtnLimpiar(e);
+                actionPerformedbtnLimpiar(e);
             }
         });
-        btnLimpiar.setBounds(510, 147, 89, 23);
+        btnLimpiar.setBounds(510, 113, 89, 23);
         panel.add(btnLimpiar);
 
         lblPorDNI = new JLabel("Buscar por DNI");
@@ -194,7 +207,6 @@ public class FormConsultaPracticantes extends JFrame {
         panel.add(txtSueldo2);
 
         txtFecha = new JDateChooser();
-        //evento when update date
         txtFecha.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 propertyChangeTxtFecha(evt);
@@ -213,8 +225,92 @@ public class FormConsultaPracticantes extends JFrame {
         tblConsultas.setModel(model);
         txtFecha.setDate(new Date(new java.util.Date().getTime()));
         txtTotal.setText(String.valueOf(consultas.totalPracticantesEnMySQL()));
+        setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-    protected void actionPerformedBtnLimpiar(ActionEvent e) {
+
+    private void actionPerformedBtnGenerarReporte(ActionEvent e) {
+        imprimirPDF();
+    }
+
+    private void imprimirPDF() {
+        String path = "src/main/java/org/zamasDev/pdf/ReportePracticantes.pdf";
+
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(path));
+
+            document.open();
+
+            Image image = Image.getInstance("src/main/java/org/zamasDev/pdf/logo.png");
+            image.scaleAbsolute(100, 100);
+            image.setAlignment(Element.ALIGN_CENTER);
+
+            document.add(new Paragraph("Reporte de Practicantes", FontFactory.getFont("arial", 22, Font.BOLD, BaseColor.DARK_GRAY)));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            document.add(new Paragraph("Fecha de Generación: " + dtf.format(now), FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            document.add(image);
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(11f);
+            table.setSpacingAfter(11f);
+
+            float[] columnWidths = {1f, 2f, 2f, 2f, 1f, 1f};
+            table.setWidths(columnWidths);
+
+            PdfPCell cell1 = new PdfPCell(new Paragraph("ID", FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            PdfPCell cell2 = new PdfPCell(new Paragraph("Nombre", FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            PdfPCell cell3 = new PdfPCell(new Paragraph("Apellido", FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            PdfPCell cell4 = new PdfPCell(new Paragraph("Fecha de Ingreso", FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            PdfPCell cell5 = new PdfPCell(new Paragraph("Sueldo", FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            PdfPCell cell6 = new PdfPCell(new Paragraph("DNI", FontFactory.getFont("arial", 12, Font.BOLD, BaseColor.DARK_GRAY)));
+
+            table.addCell(cell1);
+            table.addCell(cell2);
+            table.addCell(cell3);
+            table.addCell(cell4);
+            table.addCell(cell5);
+            table.addCell(cell6);
+
+            if (tblConsultas.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No hay datos para generar el reporte", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                for (int i = 0; i < tblConsultas.getRowCount(); i++) {
+                    String id = tblConsultas.getValueAt(i, 0).toString();
+                    String nombre = tblConsultas.getValueAt(i, 1).toString();
+                    String apellido = tblConsultas.getValueAt(i, 2).toString();
+                    String fecha = tblConsultas.getValueAt(i, 3).toString();
+                    String sueldo = tblConsultas.getValueAt(i, 4).toString();
+                    String dni = tblConsultas.getValueAt(i, 5).toString();
+
+                    table.addCell(id);
+                    table.addCell(nombre);
+                    table.addCell(apellido);
+                    table.addCell(fecha);
+                    table.addCell(sueldo);
+                    table.addCell(dni);
+                }
+                document.add(table);
+                document.close();
+                Desktop.getDesktop().open(new File(path));
+            }
+
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void actionPerformedbtnLimpiar(ActionEvent e) {
         txtNombre.setText("");
         txtDNI.setText("");
         txtSueldo1.setText("");
@@ -223,6 +319,7 @@ public class FormConsultaPracticantes extends JFrame {
         txtTotal.setText(String.valueOf(consultas.totalPracticantesEnMySQL()));
         model.setRowCount(0);
     }
+
     protected void caretUpdateTxtNombre(CaretEvent e) {
         String nombre = txtNombre.getText();
         if (nombre != null) {
@@ -234,8 +331,7 @@ public class FormConsultaPracticantes extends JFrame {
         consultas.consultarPracticantePorNombre(nombre);
         model.setRowCount(0);
         for (EntityPracticante practicante : consultas.consultarPracticantePorNombre(nombre)) {
-            model.addRow(new Object[] { practicante.getId(), practicante.getNombre(), practicante.getApellido(),
-                    practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni() });
+            model.addRow(new Object[]{practicante.getId(), practicante.getNombre(), practicante.getApellido(), practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni()});
         }
     }
 
@@ -250,8 +346,7 @@ public class FormConsultaPracticantes extends JFrame {
         consultas.consultarPracticantePorDni(dni);
         model.setRowCount(0);
         for (EntityPracticante practicante : consultas.consultarPracticantePorDni(dni)) {
-            model.addRow(new Object[] { practicante.getId(), practicante.getNombre(), practicante.getApellido(),
-                    practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni() });
+            model.addRow(new Object[]{practicante.getId(), practicante.getNombre(), practicante.getApellido(), practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni()});
         }
     }
 
@@ -266,8 +361,7 @@ public class FormConsultaPracticantes extends JFrame {
         consultas.consultarPracticantePorFecha(String.valueOf(fecha));
         model.setRowCount(0);
         for (EntityPracticante practicante : consultas.consultarPracticantePorFecha(String.valueOf(fecha))) {
-            model.addRow(new Object[] { practicante.getId(), practicante.getNombre(), practicante.getApellido(),
-                    practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni() });
+            model.addRow(new Object[]{practicante.getId(), practicante.getNombre(), practicante.getApellido(), practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni()});
         }
     }
 
@@ -291,8 +385,7 @@ public class FormConsultaPracticantes extends JFrame {
         consultas.consultarPracticantePorSueldo(sueldo1, sueldo2);
         model.setRowCount(0);
         for (EntityPracticante practicante : consultas.consultarPracticantePorSueldo(sueldo1, sueldo2)) {
-            model.addRow(new Object[] { practicante.getId(), practicante.getNombre(), practicante.getApellido(),
-                    practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni() });
+            model.addRow(new Object[]{practicante.getId(), practicante.getNombre(), practicante.getApellido(), practicante.getFechaIngreso(), practicante.getSueldo(), practicante.getDni()});
         }
     }
 

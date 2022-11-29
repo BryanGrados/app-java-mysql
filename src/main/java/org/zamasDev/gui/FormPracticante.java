@@ -277,6 +277,8 @@ public class FormPracticante extends JFrame {
         limpiarCampos();
         setIncrementedCodigo();
         timer();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
 
     //Methods

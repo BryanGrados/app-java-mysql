@@ -267,6 +267,7 @@ public class FormUserRegister extends JFrame {
         this.setLocationRelativeTo(null);
     }
 
+
     protected void lblCloseMousePressed(MouseEvent e) {
         this.dispose();
     }

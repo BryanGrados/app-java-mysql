@@ -1,5 +1,11 @@
 package org.zamasDev.gui;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.sun.org.apache.bcel.internal.generic.TABLESWITCH;
 import org.zamasDev.entity.EntityPostulante;
 import org.zamasDev.mantenimiento.ConsultasPostulantesDAO;
 import org.zamasDev.mantenimiento.GestionPostulanteDAO;
@@ -10,14 +16,24 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Logger;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -35,6 +51,7 @@ public class FormConsultaPostulantes extends JFrame {
     private JTable tblConsultas;
     private JTextField txtNombre;
     private JButton btnLimpiar;
+    private JButton btnGenerarReporte;
     private JLabel lblPorDNI;
     private JTextField txtDNI;
     private JLabel lblPorCiudad;
@@ -114,13 +131,22 @@ public class FormConsultaPostulantes extends JFrame {
         panel.add(txtNombre);
         txtNombre.setColumns(10);
 
+        btnGenerarReporte = new JButton("Reporte");
+        btnGenerarReporte.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                actionPerformedBtnGenerarReporte(e);
+            }
+        });
+        btnGenerarReporte.setBounds(510, 78, 89, 23);
+        panel.add(btnGenerarReporte);
+
         btnLimpiar = new JButton("Limpiar");
         btnLimpiar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 actionPerformedbtnLimpiar(e);
             }
         });
-        btnLimpiar.setBounds(510, 147, 89, 23);
+        btnLimpiar.setBounds(510, 113, 89, 23);
         panel.add(btnLimpiar);
 
         lblPorDNI = new JLabel("Buscar por DNI");
@@ -195,7 +221,100 @@ public class FormConsultaPostulantes extends JFrame {
 
         limpiarTabla();
         soloUnCampoActivo();
+        cargarTabla();
         txtTotal.setText(String.valueOf(consultasPostulante.totalPostulantesEnMySQL()));
+        setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
+
+    private void cargarTabla() {
+        limpiarTabla();
+        for (EntityPostulante postulante : gestionPostulante.listarPostulante()) {
+            model.addRow(new Object[]{postulante.getId(), postulante.getDni(), postulante.getNombre(), postulante.getApellido(), postulante.getCiudad(), postulante.getEstado(), postulante.getTelefono()});
+        }
+    }
+
+    private void actionPerformedBtnGenerarReporte(ActionEvent e) {
+        imprimirPDF();
+    }
+
+    private void imprimirPDF() {
+        String path = "src/main/java/org/zamasDev/pdf/ReportePostulantes.pdf";
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(path));
+
+            document.open();
+
+            Image image = Image.getInstance("src/main/java/org/zamasDev/pdf/logo.png");
+            image.scaleAbsolute(100, 100);
+            image.setAlignment(Element.ALIGN_CENTER);
+
+            document.add(new Paragraph("Reporte de Postulantes", FontFactory.getFont("Tahoma", 18, Font.BOLD, BaseColor.DARK_GRAY)));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            document.add(new Paragraph("Fecha: " + dtf.format(now), FontFactory.getFont("Tahoma", 14, Font.BOLD, BaseColor.DARK_GRAY)));
+            document.add(image);
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(7);
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(11f);
+            table.setSpacingAfter(11f);
+
+            float[] columnWidths = {1f, 1f, 1f, 1f, 1f, 1f, 1f};
+            table.setWidths(columnWidths);
+
+            PdfPCell cell1 = new PdfPCell(new Paragraph("ID"));
+            PdfPCell cell2 = new PdfPCell(new Paragraph("DNI"));
+            PdfPCell cell3 = new PdfPCell(new Paragraph("Nombre"));
+            PdfPCell cell4 = new PdfPCell(new Paragraph("Apellido"));
+            PdfPCell cell5 = new PdfPCell(new Paragraph("Ciudad"));
+            PdfPCell cell6 = new PdfPCell(new Paragraph("Estado"));
+            PdfPCell cell7 = new PdfPCell(new Paragraph("Telefono"));
+
+            table.addCell(cell1);
+            table.addCell(cell2);
+            table.addCell(cell3);
+            table.addCell(cell4);
+            table.addCell(cell5);
+            table.addCell(cell6);
+            table.addCell(cell7);
+
+            if (tblConsultas.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No hay datos para generar el reporte");
+            } else {
+                for (int i = 0; i < tblConsultas.getRowCount(); i++) {
+                    String id = tblConsultas.getValueAt(i, 0).toString();
+                    String dni = tblConsultas.getValueAt(i, 1).toString();
+                    String nombre = tblConsultas.getValueAt(i, 2).toString();
+                    String apellido = tblConsultas.getValueAt(i, 3).toString();
+                    String ciudad = tblConsultas.getValueAt(i, 4).toString();
+                    String estado = tblConsultas.getValueAt(i, 5).toString();
+                    String telefono = tblConsultas.getValueAt(i, 6).toString();
+
+                    table.addCell(id);
+                    table.addCell(dni);
+                    table.addCell(nombre);
+                    table.addCell(apellido);
+                    table.addCell(ciudad);
+                    table.addCell(estado);
+                    table.addCell(telefono);
+                }
+                document.add(table);
+                document.close();
+                Desktop.getDesktop().open(new File(path));
+            }
+
+
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void actionPerformedbtnLimpiar(ActionEvent e) {

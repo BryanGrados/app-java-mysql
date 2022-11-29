@@ -289,6 +289,8 @@ public class FormPostulante extends JFrame {
         cargarDatos();
         limpiarCampos();
         setIncrementedCodigo();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
 
     //Methods
